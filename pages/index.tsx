@@ -26,6 +26,7 @@ const calcResultState = (selectedNumbers: Array<number>) => {
 const Home = () => {
   const [remainingNumbers, setRemainingNumbers] = useState(generateNumbers(12));
   const [selectedNumberIds, setSelectedNumberIds] = useState([]);
+  const [correctNumberIds, setCorrectNumberIds] = useState([]);
   const [resultState, setResultState] = useState("READY");
   const [score, setScore] = useState(0);
 
@@ -55,11 +56,13 @@ const Home = () => {
         <div className="numbers">
           {remainingNumbers.map(({ id, digit }) => {
             const isSelected = selectedNumberIds.includes(id);
+            const isCorrect = correctNumberIds.includes(id);
             return (
               <button
                 className={
                   "number-button " +
-                  (isSelected ? "number-button-selected" : "")
+                  (isSelected ? "number-button-selected" : "") +
+                  (isCorrect ? "number-button-correct" : "")
                 }
                 key={id}
                 onClick={() => {
@@ -81,6 +84,8 @@ const Home = () => {
                   const result = calcResultState(selectedNumbers);
                   setResultState(result);
                   if (result === "CORRECT") {
+                    setSelectedNumberIds([]);
+                    setCorrectNumberIds(newSelectedNumberIds);
                     setScore(score + 1);
                     setTimeout(() => {
                       setResultState("READY");
@@ -90,7 +95,11 @@ const Home = () => {
                         ),
                         ...generateNumbers(newSelectedNumberIds.length)
                       ]);
-                      setSelectedNumberIds([]);
+                      setCorrectNumberIds(correctNumberIds =>
+                        correctNumberIds.filter(
+                          i => !newSelectedNumberIds.includes(i)
+                        )
+                      );
                     }, 2000);
                   }
                 }}
@@ -190,6 +199,16 @@ const Home = () => {
 
         .number-button-selected:hover {
           background: #800202;
+        }
+
+        .number-button-correct {
+          background: #b42121;
+          color: #e4fd6a;
+          opacity: 0.5;
+        }
+
+        .number-button-correct:hover {
+          background: #b42121;
         }
       `}</style>
 
