@@ -61,33 +61,35 @@ const Home = () => {
                 }
                 key={id}
                 onClick={() => {
-                  if (isSelected) {
-                    setSelectedNumberIds(
-                      selectedNumberIds.filter(i => id != i)
-                    );
-                  } else {
-                    const newSelectedNumberIds = [...selectedNumberIds, id];
-                    setSelectedNumberIds(newSelectedNumberIds);
+                  let newSelectedNumberIds = undefined;
 
-                    const selectedNumbers = newSelectedNumberIds.map(
-                      i =>
-                        remainingNumbers.find(number => number.id === i).digit
+                  if (isSelected) {
+                    newSelectedNumberIds = selectedNumberIds.filter(
+                      i => id != i
                     );
-                    const result = calcResultState(selectedNumbers);
-                    setResultState(result);
-                    if (result === "CORRECT") {
-                      setScore(score + 1);
-                      setTimeout(() => {
-                        setResultState("READY");
-                        setRemainingNumbers([
-                          ...remainingNumbers.filter(
-                            number => !newSelectedNumberIds.includes(number.id)
-                          ),
-                          ...generateNumbers(newSelectedNumberIds.length)
-                        ]);
-                        setSelectedNumberIds([]);
-                      }, 2000);
-                    }
+                    setSelectedNumberIds(newSelectedNumberIds);
+                  } else {
+                    newSelectedNumberIds = [...selectedNumberIds, id];
+                    setSelectedNumberIds(newSelectedNumberIds);
+                  }
+
+                  const selectedNumbers = newSelectedNumberIds.map(
+                    i => remainingNumbers.find(number => number.id === i).digit
+                  );
+                  const result = calcResultState(selectedNumbers);
+                  setResultState(result);
+                  if (result === "CORRECT") {
+                    setScore(score + 1);
+                    setTimeout(() => {
+                      setResultState("READY");
+                      setRemainingNumbers([
+                        ...remainingNumbers.filter(
+                          number => !newSelectedNumberIds.includes(number.id)
+                        ),
+                        ...generateNumbers(newSelectedNumberIds.length)
+                      ]);
+                      setSelectedNumberIds([]);
+                    }, 2000);
                   }
                 }}
               >
