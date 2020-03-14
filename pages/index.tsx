@@ -1,11 +1,13 @@
 import Head from "next/head";
 import { useState } from "react";
 
+const distribution = [0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 7, 8, 9];
+
 const generateNumbers = amount => {
   return Array.from({ length: amount }, () => {
     return {
       id: Math.floor(Math.random() * 1000000),
-      digit: Math.floor(Math.random() * 10)
+      digit: distribution[Math.floor(Math.random() * distribution.length)]
     };
   });
 };
